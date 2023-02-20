@@ -16,7 +16,6 @@ switch ($_GET['teste'])
         $width = 200;
 	$height = 100;
 	$fontfile = "OpenSans-Regular.ttf";
-
         $image = imagecreatetruecolor($width, $height);
 
 	$white = imagecolorallocate($image, 255, 255, 255);
