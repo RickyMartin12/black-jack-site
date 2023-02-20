@@ -24,6 +24,7 @@ RUN set -ex; \
     apt-get install -y --quiet --no-install-recommends \
         libfreetype6-dev \
         libjpeg-dev \
+        libmagickwand-dev \
         libmcrypt-dev \
         libpng-dev \
         libwebp-dev \
@@ -42,6 +43,12 @@ RUN set -ex; \
     # delete output (except errors)
     > /dev/null \
     ; \
+    \
+    # install imagick
+    # https://pecl.php.net/package/imagick
+    pecl install imagick; \
+        docker-php-ext-enable imagick; \
+        rm -r /tmp/pear; \
     \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
