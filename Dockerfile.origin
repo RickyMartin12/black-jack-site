@@ -1,31 +1,97 @@
-FROM php:7.2-fpm
+#FROM geerlingguy/php-apache:latest
+FROM php:8.0-apache
 
-# Replace shell with bash so we can source files
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+# install persistent PHP extensions (they won't get purged afterwards)
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --quiet --no-install-recommends \
+        ghostscript \
+        locales \
+        unzip \
+    ; \
+    rm -rf /var/lib/apt/lists/*
 
-# make sure apt is up to date
-RUN apt-get update --fix-missing
-RUN apt-get install -y curl
-RUN apt-get install -y build-essential libssl-dev zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev
+# install PHP extensions
+RUN set -ex; \
+    \
+    # mark packages as being manually installed
+    # see https://manpages.debian.org/stretch/apt/apt-mark.8.en.html
+    savedAptMark="$(apt-mark showmanual)"; \
+    \
+    # install via apt-get
+    # see https://manpages.debian.org/stretch/apt/apt-get.8.en.html
+    apt-get update; \
+    apt-get install -y --quiet --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg-dev \
+        libmagickwand-dev \
+        libmcrypt-dev \
+        libpng-dev \
+        libwebp-dev \
+        libzip-dev \
+    ; \
+    \
+    # install and configure via docker-php-ext
+    # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
+    docker-php-ext-install -j "$(nproc)" \
+        exif \
+        gd \
+        intl \
+        pdo_mysql \
+        zip \
+    # delete output (except errors)
+    > /dev/null \
+    ; \
+    \
+    # install imagick
+    # https://pecl.php.net/package/imagick
+    pecl install imagick; \
+        docker-php-ext-enable imagick; \
+        rm -r /tmp/pear; \
+    \
+    # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+    # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
+    apt-mark auto '.*' > /dev/null; \
+    apt-mark manual $savedAptMark; \
+    ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+        | awk '/=>/ { print $3 }' \
+        | sort -u \
+        | xargs -r dpkg-query -S \
+        | cut -d: -f1 \
+        | sort -u \
+        | xargs -rt apt-mark manual; \
+    \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /var/lib/apt/lists/*
 
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 9.2.0
-
-# Install nvm with node and npm
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash \
-    && source $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
-
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+RUN docker-php-ext-install -j "$(nproc)" opcache
+RUN set -ex; \
+  { \
+    echo "; Cloud Run enforces memory & timeouts"; \
+    echo "memory_limit = -1"; \
+    echo "max_execution_time = 0"; \
+    echo "; File upload at Cloud Run network limit"; \
+    echo "upload_max_filesize = 1024M"; \
+    echo "post_max_size = 1024M"; \
+    echo "; Configure Opcache for Containers"; \
+    echo "opcache.enable = On"; \
+    echo "opcache.validate_timestamps = Off"; \
+    echo "; Configure Opcache Memory (Application-specific)"; \
+    echo "opcache.memory_consumption = 32"; \
+  } > "$PHP_INI_DIR/conf.d/cloud-run.ini"
 
 WORKDIR /var/www/html
 
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+#RUN rm /var/www/html/index.html
+COPY . /var/www/html/.
 
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN chmod -R 777 /var/www/html/captcha.php
+RUN chmod -R 777 /var/www/html/images
+RUN chmod -R 777 /var/www/html/img
+RUN chmod -R 777 /var/www/html/content
 
-RUN usermod -u 1000 www-data
+COPY ./ports.conf /etc/apache2/ports.conf
+COPY ./apache.conf /etc/apache2/site-enabled/000-default.conf
+
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
