@@ -1,19 +1,14 @@
 #FROM geerlingguy/php-apache:latest
-FROM php:5.6-apache
+FROM php:8.0-apache
 
-RUN docker-php-ext-install mysql mysqli
-
-RUN apt-get update -y && apt-get install -y sendmail libpng-dev
-
-RUN apt-get update && \
-    apt-get install -y \
-        zlib1g-dev 
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
 RUN docker-php-ext-install mbstring
 
 RUN docker-php-ext-install zip
 
 RUN docker-php-ext-install gd
+
 
 RUN docker-php-ext-install -j "$(nproc)" opcache
 RUN set -ex; \
@@ -36,7 +31,7 @@ WORKDIR /var/www/html
 #RUN rm /var/www/html/index.html
 COPY . /var/www/html/.
 
-RUN chmod -R 777 /var/www/html/captcha.php
+RUN chmod -R 777 /var/www/html/
 RUN chmod -R 777 /var/www/html/images
 RUN chmod -R 777 /var/www/html/img
 RUN chmod -R 777 /var/www/html/content
