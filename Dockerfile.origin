@@ -36,7 +36,7 @@ WORKDIR /var/www/html
 #RUN rm /var/www/html/index.html
 COPY . /var/www/html/.
 
-RUN chmod -R 777 /var/www/html/
+RUN chmod -R 777 /var/www/html/captcha.php
 RUN chmod -R 777 /var/www/html/images
 RUN chmod -R 777 /var/www/html/img
 RUN chmod -R 777 /var/www/html/content
