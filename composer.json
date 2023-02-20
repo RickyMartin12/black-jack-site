@@ -1,7 +1,0 @@
-{
-    "require": {
-        "intervention/image": "^2.7",
-        "ext-gd": "*",
-        "phpmailer/phpmailer": "^6.6"
-    }
-}
