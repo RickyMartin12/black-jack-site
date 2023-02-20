@@ -77,13 +77,8 @@ switch ($_GET['teste'])
         break;
 
     case 'return_captcha':
-
-        $myimage = create_capacha($captcha);
-	file_put_contents($filename, $captcha);
-
-        $number = file_get_contents($filename);
-
-        return $number;
+        
+        return $captcha;
 
         break;
 
