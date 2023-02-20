@@ -61,7 +61,13 @@ if( isset($_POST['button']))
         include 'content/modals.php';
 ?>
 
-
+<script>
+    $( document ).ready(function() {     
+        $.get( "captcha.php?teste=image_captcha", function( data ) {
+            console.log( "Load was performed." );
+        });
+    });
+</script>    
 <!--=======content================================-->
 <div class="content">
   <div class="container_12">
@@ -124,7 +130,7 @@ if( isset($_POST['button']))
         <input type='text' name='value' placeholder="Captcha" oninput="requiredForm();">
           <br class="clear">
           <span class="error error-empty"></span>
-        <img src='captcha.php?teste=image_captcha'></img><br>
+        <img src='capacha.jpg'></img><br>
           <?php echo $msg; ?>
         </label>
       <div class="clear"></div>
@@ -145,6 +151,8 @@ if( isset($_POST['button']))
 ?>
 
 <script>
+
+    
 
     clearForm();
     function clearForm()
@@ -175,6 +183,8 @@ if( isset($_POST['button']))
         $( ".name" ).children( ".error" ).fadeIn(3000);
         $( ".name" ).children( ".error" ).html("*This field is required.");
     }
+
+
 
 
 
