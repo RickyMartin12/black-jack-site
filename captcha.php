@@ -23,7 +23,7 @@ switch ($_GET['teste'])
 	$black = imagecolorallocate($image, 0, 0, 0);
 
         imagefill($image, 0, 0, $white);
-	imagettftext($image, 25, rand(-20,20), $width/4, 60, $black, $fontfile, $text);
+	imagettftext($image, 25, rand(-20,20), $width/4, 60, $black, $fontfile, $captcha);
 
         header('Content-type: image/jpeg');
 
