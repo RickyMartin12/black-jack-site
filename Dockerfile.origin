@@ -8,7 +8,6 @@ RUN set -eux; \
         unzip \
     ; \
     rm -rf /var/lib/apt/lists/*
-
 # install PHP extensions
 RUN set -ex; \
     \
