@@ -60,14 +60,7 @@ if( isset($_POST['button']))
         include 'content/menu_contactos.php';
         include 'content/modals.php';
 ?>
-
-<script>
-    $( document ).ready(function() {     
-        $.get( "captcha.php?teste=image_captcha", function( data ) {
-            console.log( "Load was performed." );
-        });
-    });
-</script>    
+   
 <!--=======content================================-->
 <div class="content">
   <div class="container_12">
