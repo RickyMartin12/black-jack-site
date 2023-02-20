@@ -209,6 +209,7 @@ if( isset($_POST['button']))
         $.ajax({ method: "GET", url: "captcha.php", data: { 'teste': 'return_captcha'}})
             .done(function( data )
             {
+                console.log(data);
                 //console.log(data);
 
                 // Texto Message
