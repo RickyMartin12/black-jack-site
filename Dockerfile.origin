@@ -1,6 +1,4 @@
-#FROM geerlingguy/php-apache:latest
 FROM php:8.0-apache
-
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
     apt-get update; \
