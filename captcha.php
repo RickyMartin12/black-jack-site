@@ -4,9 +4,6 @@
 // the captcha externally!
 session_start();
 
-$captcha = rand(1000, 9999);
-$_SESSION["captcha"] = $captcha;
-
 // Generate a random number
 // from 1000-9999
 switch ($_GET['teste'])
@@ -17,6 +14,10 @@ switch ($_GET['teste'])
 	$height = 100;
 	$fontfile = "OpenSans-Regular.ttf";
         $image = imagecreatetruecolor($width, $height);
+
+        $captcha = rand(1000, 9999);
+        $_SESSION["captcha"] = $captcha;
+
 
 	$white = imagecolorallocate($image, 255, 255, 255);
 	$black = imagecolorallocate($image, 0, 0, 0);
@@ -30,11 +31,12 @@ switch ($_GET['teste'])
 	imagedestroy($image);
         //$myimage = create_capacha($captcha);
 	//file_put_contents($filename, $captcha);
+        return $captcha;
         break;
 
     case 'return_captcha':
 
-        echo $captcha;
+        return $_SESSION["captcha"];
 
         break;
 

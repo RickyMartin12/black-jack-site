@@ -123,7 +123,7 @@ if( isset($_POST['button']))
         <input type='text' name='value' placeholder="Captcha" oninput="requiredForm();">
           <br class="clear">
           <span class="error error-empty"></span>
-        <img src='captcha.php?teste=image_captcha'></img><br>
+        <img src='captcha.php?teste=image_captcha' id="captcha_id_contact"></img><br>
           <?php echo $msg; ?>
         </label>
       <div class="clear"></div>
