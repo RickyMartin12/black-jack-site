@@ -4,8 +4,6 @@
 // the captcha externally!
 session_start();
 
-$filename = session_id();
-
 $captcha = rand(1000, 9999);
 $_SESSION["captcha"] = $captcha;
 
@@ -36,7 +34,7 @@ switch ($_GET['teste'])
 
     case 'return_captcha':
 
-        return $_SESSION["captcha"];
+        echo $_SESSION["captcha"];
 
         break;
 

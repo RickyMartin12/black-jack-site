@@ -230,11 +230,11 @@ if( isset($_POST['button']))
                         $( ".captcha" ).children( ".error" ).fadeOut(3000);
                         $( ".captcha" ).children( ".error" ).html("");
                     }
-                    else
+                    /*else
                     {
                         $( ".captcha" ).children( ".error" ).fadeIn(3000);
                         $( ".captcha" ).children( ".error" ).html("*CAPTCHA FAILED!!!");
-                    }
+                    }*/
                 }
                 else
                 {
