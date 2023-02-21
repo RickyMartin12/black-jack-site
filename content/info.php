@@ -52,10 +52,9 @@ $mail->SMTPAuth = true;
 
 // Usu�rio para usar SMTP authentication
 // Use o endere�o completodo e-mail do Gmail
-$mail->Username = 'ricardopeleira16@gmail.com'; // SMTP username from https://mailgun.com/cp/domains
-
-$mail->Password = 'npgnxhymkcxeoobc'; // SMTP password from https://mailgun.com/cp/domains
-
+$mail->Username = 'ricardomanuelpeleira@gmail.com';
+// Senha para SMTP authentication
+$mail->Password = 'qcwrdlcthjenrtln';
 // Definir o remetente
 $mail->setFrom('ricardopeleira16@gmail.com', 'Curso');
 
