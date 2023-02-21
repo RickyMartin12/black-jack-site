@@ -36,7 +36,7 @@ switch ($_GET['teste'])
 
     case 'return_captcha':
 
-        return $_SESSION["captcha"];
+        echo $_SESSION["captcha"];
 
         break;
 
