@@ -24,3 +24,7 @@ jobs:
 workflows:
   build-and-test:
     jobs:
+      - test-php
+    # - deploy:
+    #     requires:
+    #       - test-php
