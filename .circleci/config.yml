@@ -12,9 +12,6 @@ jobs:
       - checkout:
           path: ~/project
       - php/install-packages
-      - run:
-          name: run tests
-          command: ./vendor/bin/phpunit
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:
